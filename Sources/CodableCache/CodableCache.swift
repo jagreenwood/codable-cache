@@ -10,7 +10,7 @@ import Foundation
 
 public final class CodableCache {
     private lazy var cache: DiskCache = {
-        try! DiskCache(storageType: self.storageType)
+        try! DiskCache(storageType: self.storageType, appGroupID: appGroupID)
     }()
 
     private lazy var encoder: JSONEncoder = {
@@ -28,9 +28,11 @@ public final class CodableCache {
     }()
 
     public private(set) var storageType: StorageType
+    public private(set) var appGroupID: String?
 
-    public init(_ storageType: StorageType = .temporary(.custom("codable-cache"))) {
+    public init(_ storageType: StorageType = .temporary(.custom("codable-cache")), appGroupID: String? = nil) {
         self.storageType = storageType
+        self.appGroupID = appGroupID
     }
 
     public func cache<T: Codable>(object: T, key: Keyable, ttl: TTL = TTL.default) throws {

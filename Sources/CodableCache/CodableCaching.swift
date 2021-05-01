@@ -11,11 +11,12 @@ import Foundation
 @propertyWrapper
 public final class CodableCaching<Value: Codable> {
     private lazy var codableCache: CodableCache = {
-        CodableCache(self.storageType)
+        CodableCache(self.storageType, appGroupID: appGroupID)
     }()
 
     private let key: Keyable
     private let storageType: StorageType
+    private let appGroupID: String?
     private let ttl: TTL
     private let defaultValue: Value
 
@@ -43,20 +44,24 @@ public final class CodableCaching<Value: Codable> {
     public init(defaultValue: Value,
                 key: Keyable,
                 storageType: StorageType = .temporary(.custom("codable-cache")),
+                appGroupID: String? = nil,
                 ttl: TTL = .default) {
         self.key = key
         self.defaultValue = defaultValue
         self.storageType = storageType
+        self.appGroupID = appGroupID
         self.ttl = ttl
     }
 
     public init(wrappedValue: Value,
                 key: Keyable,
                 storageType: StorageType = .temporary(.custom("codable-cache")),
+                appGroupID: String? = nil,
                 ttl: TTL = .default) {
         self.key = key
-        self.storageType = storageType
-        self.ttl = ttl
         self.defaultValue = wrappedValue
+        self.storageType = storageType
+        self.appGroupID = appGroupID
+        self.ttl = ttl
     }
 }
